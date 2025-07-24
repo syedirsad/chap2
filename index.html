@@ -547,7 +547,7 @@
                                 question_en: "For parallel plate capacitors with finite area plates, the electric field lines bend outwards near the edges. This phenomenon is called ______.",
                                 options_gu: ["સ્થિતવિદ્યુત શીલ્ડીંગ", "ધ્રુવીભવન", "ફે-રિંગ વોલ્ટ એન્ડ ફિલ્ડ્સ", "વિવર્તન"],
                                 options_en: ["Electrostatic shielding", "Polarization", "Fringing fields", "Diffraction"],
-                                answer: 1, // Note: The original answer for this question was 1 (Polarization), but the solution text mentions 'Fringing Effect'. I've kept the original answer.
+                                answer: 1, 
                                 imageUrl: "image_219afd.png-20234712-bfac-47ef-962d-0b7fa5d4e1a8",
                             }
                         ]
@@ -730,7 +730,7 @@
                 renderHomePageContent(); 
             } else if (!quizPage.classList.contains('hidden')) {
                 updateProgressText();
-                showQuestion(); // Re-render current question when language changes on quiz page
+                showQuestion(); 
             } else if (!resultContainer.classList.contains('hidden')) {
                 showScore(); 
             }
@@ -740,9 +740,6 @@
             currentLanguage = currentLanguage === 'gu' ? 'en' : 'gu';
             document.documentElement.lang = currentLanguage; 
             updateUIText(); 
-            if (!homePage.classList.contains('hidden')) {
-                renderHomePageContent(); 
-            }
         }
         
         function updateProgressText() {
@@ -762,13 +759,13 @@
                 let quizButtonsHTML = chapter.quizzes.map(quiz => `
                     <button class="quiz-btn text-white font-medium py-3 px-4 mb-3"
                             onclick="loadQuiz('${chapter.id}', '${quiz.id}')">
-                        ${quiz[`name_${currentLanguage}`]} ${lang.startQuiz}
+                        ${quiz[`name_${currentLanguage}`] || quiz.name_gu} ${lang.startQuiz}
                     </button>
                 `).join('');
 
                 chapterCard.innerHTML = `
-                    <h2 class="text-2xl font-semibold text-slate-800 mb-3">${chapter[`name_${currentLanguage}`]}</h2>
-                    <p class="text-slate-600 mb-4">${chapter[`description_${currentLanguage}`]}</p>
+                    <h2 class="text-2xl font-semibold text-slate-800 mb-3">${chapter[`name_${currentLanguage}`] || chapter.name_gu}</h2>
+                    <p class="text-slate-600 mb-4">${chapter[`description_${currentLanguage}`] || chapter.description_gu}</p>
                     <div class="space-y-3 mt-5">${quizButtonsHTML}</div>
                 `;
                 chaptersContainer.appendChild(chapterCard);
@@ -789,8 +786,8 @@
             currentQuizQuestions = [...currentQuiz.questions];
             userAnswers = new Array(currentQuizQuestions.length).fill(null);
 
-            quizTitle.innerText = `${currentChapter[`name_${currentLanguage}`]} : ${currentQuiz[`name_${currentLanguage}`]}`;
-            quizDescription.innerText = currentChapter[`description_${currentLanguage}`];
+            quizTitle.innerText = `${currentChapter[`name_${currentLanguage}`] || currentChapter.name_gu} : ${currentQuiz[`name_${currentLanguage}`] || currentQuiz.name_gu}`;
+            quizDescription.innerText = currentChapter[`description_${currentLanguage}`] || currentChapter.description_gu;
 
             homePage.classList.add('hidden');
             quizPage.classList.remove('hidden');
@@ -829,7 +826,7 @@
             updateProgressText(); 
             
             // Display question text
-            questionText.innerHTML = currentQuestion[`question_${currentLanguage}`];
+            questionText.innerHTML = currentQuestion[`question_${currentLanguage}`] || currentQuestion.question_gu;
             
             // Handle image
             questionImage.classList.add('hidden');
@@ -846,7 +843,10 @@
             }
 
             // Display options
-            currentQuestion[`options_${currentLanguage}`].forEach((option, index) => {
+            optionsContainer.innerHTML = ''; // Clear existing options
+            const optionsToDisplay = currentQuestion[`options_${currentLanguage}`] || currentQuestion.options_gu;
+
+            optionsToDisplay.forEach((option, index) => {
                 const button = document.createElement('button');
                 button.innerHTML = option;
                 button.classList.add('option-btn', 'w-full', 'p-4', 'text-left', 'bg-white', 'text-slate-700', 'mb-2');
