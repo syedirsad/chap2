@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET PHYSICS GUJARATI : GSEB - NEET QUIZ PORTAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'amber': {
+                            '50': '#fffbeb',
+                            '100': '#fef3c7',
+                            '200': '#fde68a',
+                            '300': '#fcd34d',
+                            '400': '#fbbf24',
+                            '500': '#f59e0b',
+                            '600': '#d97706',
+                            '700': '#b45309',
+                            '800': '#92400e',
+                            '900': '#78350f',
+                        },
+                        'primary': {
+                            '50': '#fffbeb',
+                            '100': '#fef3c7',
+                            '500': '#f59e0b',
+                            '700': '#b45309',
+                        },
+                        'secondary': {
+                            '50': '#f0f9ff',
+                            '100': '#e0f2fe',
+                            '500': '#0ea5e9',
+                            '700': '#0369a1',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Hind Vadodara', sans-serif;
+            background: linear-gradient(135deg, #fffbeb 0%, #f0f9ff 100%);
+            background-attachment: fixed;
+        }
+        
+        .app-container {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+        
+        .chapter-card {
+            transition: all 0.3s ease;
+            background: linear-gradient(to bottom, #ffffff 0%, #fdf8f2 100%);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        
+        .quiz-btn {
+            background: linear-gradient(to right, #f59e0b 0%, #fbbf24 100%);
+            transition: all 0.3s ease;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quiz-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);
+        }
+        
+        .quiz-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(25deg);
+            transition: all 0.6s;
+        }
+        
+        .quiz-btn:hover::after {
+            left: 120%;
+        }
+        
+        .option-btn {
+            transition: all 0.2s ease;
+            border-radius: 0.75rem;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            transform: translateX(5px);
+            border-color: #fbbf24;
+        }
+        
+        .option-btn:focus {
+            outline: 2px solid #f59e0b;
+            outline-offset: 2px;
+        }
+        
+        .option-btn.correct {
+            background: linear-gradient(to right, #22c55e 0%, #4ade80 100%);
+            color: white;
+            border-color: #16a34a;
+        }
+        
+        .option-btn.incorrect {
+            background: linear-gradient(to right, #ef4444 0%, #f87171 100%);
+            color: white;
+            border-color: #dc2626;
+        }
+        
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+        
+        .solution-box {
+            background: linear-gradient(to right, #f0fdf4 0%, #ecfdf5 100%);
+            border-left: 4px solid #4ade80;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+            border-radius: 0.75rem;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .score-display {
+            background: linear-gradient(135deg, #f0f9ff 0%, #fffbeb 100%);
+            border-radius: 1rem;
+            border: 2px dashed #f59e0b;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            margin: 1.25rem 0;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .image-placeholder {
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 0.75rem;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(245, 158, 11, 0.2);
+            border-top: 3px solid #f59e0b;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+        
+        .result-star {
+            animation: bounce-slow 2s infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .nav-btn {
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            min-width: 120px;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <!-- MathJax Configuration and Loading -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        console.log('MathJax initialized');
+                    });
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body class="min-h-screen p-4">
+    <div class="max-w-4xl mx-auto py-8">
+        <div class="app-container p-6 sm:p-8">
+            <!-- Home Page (Chapters List) -->
+            <div id="home-page" class="text-center">
+                <div class="mb-10">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-amber-700 mb-4">NEET PHYSICS GUJARATI : GSEB - NEET QUIZ PORTAL</h1>
+                    <div class="w-24 h-1 bg-amber-500 mx-auto rounded-full mb-6"></div>
+                    <p class="text-base text-slate-600 max-w-2xl mx-auto">
+                        GSEB બોર્ડ પરીક્ષાના પાછલા વર્ષના પ્રશ્નો (PYQ) પર આધારિત ક્વિઝ દ્વારા તમારા ભૌતિકશાસ્ત્રના જ્ઞાનને ચકાસો અને પરીક્ષાની તૈયારી કરો.
+                    </p>
+                </div>
+                <div id="chapters-container" class="grid grid-cols-1 gap-8">
+                    <!-- Chapter cards will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Quiz Page (Hidden by default) -->
+            <div id="quiz-page" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 id="quiz-title" class="text-xl sm:text-2xl font-bold text-slate-800"></h1>
+                        <p id="quiz-description" class="text-sm text-slate-600 mt-1"></p>
+                    </div>
+                    <div id="progress" class="text-base font-medium bg-amber-100 text-amber-800 py-1 px-3 rounded-full"></div>
+                </div>
+                
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                    <div id="progress-bar" class="progress-bar bg-amber-500 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+
+                <div id="question-card" class="bg-white p-6 rounded-xl shadow-sm border border-amber-100">
+                    <p id="question-text" class="text-lg sm:text-xl text-slate-700 mb-6 leading-relaxed font-medium"></p>
+                    
+                    <div id="image-container">
+                        <img id="question-image" class="question-image hidden" alt="Question Diagram">
+                        <div id="image-placeholder" class="image-placeholder hidden">
+                            <p>આ પ્રશ્ન માટેની છબી ઉપલબ્ધ નથી</p>
+                        </div>
+                    </div>
+                    
+                    <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    </div>
+                    
+                    <div id="solution-display" class="solution-box hidden">
+                        <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                            ઉકેલ:
+                        </h3>
+                        <p id="solution-text" class="text-slate-600 text-sm sm:text-base"></p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-between items-center">
+                    <button id="prev-btn" class="nav-btn bg-slate-200 text-slate-700 font-bold py-3 px-6 hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                        </svg>
+                        પાછળ
+                    </button>
+                    <div class="ml-auto flex items-center">
+                        <span id="current-score" class="text-sm font-medium bg-blue-100 text-blue-800 py-1 px-3 rounded-full mr-4 hidden">
+                            સ્કોર: <span id="score-value">0</span>/<span id="total-questions">0</span>
+                        </span>
+                        <button id="next-btn" class="nav-btn bg-amber-500 text-white font-bold py-3 px-6 hidden">
+                            આગળ
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Container (Hidden by default) -->
+            <div id="result-container" class="text-center hidden">
+                <div class="mb-8">
+                    <div class="flex justify-center mb-6">
+                        <svg class="h-16 w-16 text-amber-500 result-star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-amber-700 mb-4">ક્વિઝ પૂર્ણ!</h2>
+                    <div class="w-16 h-1 bg-amber-500 mx-auto rounded-full mb-6"></div>
+                </div>
+                
+                <div class="score-display p-8 mb-10">
+                    <p id="score-text" class="text-xl text-slate-700 mb-2"></p>
+                    <p id="score-percentage" class="text-3xl font-bold text-amber-600 mb-6"></p>
+                    <div class="flex justify-center space-x-2 mb-6">
+                        <div class="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="score-bar-1" class="h-full bg-green-500"></div>
+                        </div>
+                        <div class="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="score-bar-2" class="h-full bg-green-500"></div>
+                        </div>
+                        <div class="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="score-bar-3" class="h-full bg-green-500"></div>
+                        </div>
+                        <div class="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="score-bar-4" class="h-full bg-green-500"></div>
+                        </div>
+                        <div class="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="score-bar-5" class="h-full bg-green-500"></div>
+                        </div>
+                    </div>
+                    <p id="encouragement" class="text-slate-600 italic"></p>
+                </div>
+                
+                <button id="restart-btn" class="nav-btn bg-amber-500 text-white font-bold py-3 px-8 mx-auto">
+                    હોમ પેજ પર જાઓ
+                </button>
+            </div>
+        </div>
+        
+        <footer class="mt-12 text-center text-slate-500 text-sm">
+            © 2025 GSEB - NEET Quiz Portal. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        // Chapter and Quiz Data Structure
+        const chapterData = [
+            {
+                id: 'chapter2',
+                name: 'સ્થિત વિદ્યુત સ્થિતિમાન અને કેપેસિટન્સ',
+                description: 'આ ક્વિઝ GSEB બોર્ડ પરીક્ષાના પ્રકરણ 2: "સ્થિત વિદ્યુત સ્થિતિમાન અને કેપેસિટન્સ" ના પાછલા વર્ષના પ્રશ્નો (PYQ) પર આધારિત છે. તમારા જ્ઞાનને ચકાસો અને પરીક્ષાની તૈયારી કરો.',
+                quizzes: [
+                    {
+                        id: 'chapter2-pyq2025',
+                        name: 'PYQ માર્ચ 2025',
+                        questions: [
+                            {
+                                question: "$4 \\times 10^{-7}$C વિદ્યુતભારથી 9 cm દૂર આવેલા બિંદુએ સ્થિતિમાન કેટલું થાય?",
+                                options: ["$4 \\times 10^4$ V", "$4 \\times 10^5$ V", "$4 \\times 10^{-4}$ V", "$4 \\times 10^3$ V"],
+                                answer: 0,
+                                solution: `
+                                    <p>આ પ્રશ્નનો ઉકેલ કુલંબના નિયમનો ઉપયોગ કરીને કરી શકાય છે.</p>
+                                    <p>બિંદુવત વિદ્યુતભારને કારણે કોઈ બિંદુએ વિદ્યુત સ્થિતિમાન (V) નું સૂત્ર નીચે મુજબ છે:</p>
+                                    <p>$$V = \\frac{kq}{r}$$</p>
+                                    <p>જ્યાં,</p>
+                                    <ul>
+                                        <li>$k$ = કુલંબનો અચળાંક = $9 \\times 10^9$ Nm$^2$/C$^2$</li>
+                                        <li>$q$ = વિદ્યુતભાર = $4 \\times 10^{-7}$ C</li>
+                                        <li>$r$ = અંતર = 9 cm = $9 \\times 10^{-2}$ m</li>
+                                    </ul>
+                                    <p>હવે કિંમતો મૂકીએ:</p>
+                                    <p>$$V = \\frac{(9 \\times 10^9) \\times (4 \\times 10^{-7})}{9 \\times 10^{-2}}$$</p>
+                                    <p>$$V = 4 \\times 10^{9 - 7 - (-2)}$$</p>
+                                    <p>$$V = 4 \\times 10^{9 - 7 + 2}$$</p>
+                                    <p>$$V = 4 \\times 10^4 \\text{ V}$$</p>
+                                    <p>આથી, વિદ્યુતભારથી 9 cm દૂર આવેલા બિંદુએ સ્થિતિમાન $4 \\times 10^4$ V થાય છે.</p>
+                                `
+                            },
+                            {
+                                question: "900 pF ના એક કેપેસિટરને 100 V ની બેટરી વડે વિદ્યુતભારિત કરાય છે. હવે કેપેસિટરનું બેટરીથી જોડાણ દૂર કરી બીજા 900 pF ના વિદ્યુતભાર વિહિન કેપેસિટર સાથે જોડવામાં આવે છે, તો આ પ્રક્રિયામાં કેટલી ઉર્જા ગુમાવાઈ હશે?",
+                                options: ["$2.25 \\times 10^{-6}$ J", "$4.5 \\times 10^{-6}$ J", "$1.125 \\times 10^{-6}$ J", "શૂન્ય"],
+                                answer: 0,
+                                solution: `
+                                    <p>આ પ્રશ્નનો ઉકેલ કેપેસિટરમાં સંગ્રહિત ઉર્જા અને બે કેપેસિટરોના જોડાણ પછી ઉર્જાના નુકસાનના સિદ્ધાંત પર આધારિત છે.</p>
+                                    <p><strong>પ્રથમ કેપેસિટર (C1) માં સંગ્રહિત પ્રારંભિક ઉર્જા (U1):</strong></p>
+                                    <p>કેપેસિટન્સ $C_1 = 900 \\text{ pF} = 900 \\times 10^{-12} \\text{ F}$</p>
+                                    <p>વોલ્ટેજ $V_1 = 100 \\text{ V}$</p>
+                                    <p>$$U_1 = \\frac{1}{2} C_1 V_1^2$$</p>
+                                    <p>$$U_1 = \\frac{1}{2} (900 \\times 10^{-12}) (100)^2 = \\frac{1}{2} \\times 900 \\times 10^{-12} \\times 10000 = 4.5 \\times 10^{-6} \\text{ J}$$</p>
+
+                                    <p><strong>બે કેપેસિટરોને જોડ્યા પછી અંતિમ ઉર્જા (Uf):</strong></p>
+                                    <p>જ્યારે પ્રથમ કેપેસિટર (જે વિદ્યુતભારિત છે) ને બીજા વિદ્યુતભાર વિહિન કેપેસિટર (C2 = 900 pF) સાથે સમાંતરમાં જોડવામાં આવે છે, ત્યારે કુલ કેપેસિટન્સ $C_{\\text{total}} = C_1 + C_2 = 900 \\text{ pF} + 900 \\text{ pF} = 1800 \\text{ pF}$ થાય છે.</p>
+                                    <p>આ જોડાણ પછી, સામાન્ય સ્થિતિમાન (common potential) $V_{\\text{common}}$ બને છે:</p>
+                                    <p>$$V_{\\text{common}} = \\frac{C_1 V_1 + C_2 V_2}{C_1 + C_2}$$</p>
+                                    <p>અહીં, $V_2 = 0$ (કારણ કે બીજું કેપેસિટર વિદ્યુતભાર વિહિન છે).</p>
+                                    <p>$$V_{\\text{common}} = \\frac{(900 \\times 10^{-12}) \\times 100 + (900 \\times 10^{-12}) \\times 0}{1800 \\times 10^{-12}}$$</p>
+                                    <p>$$V_{\\text{common}} = \\frac{900 \\times 100}{1800} = 50 \\text{ V}$$</p>
+                                    <p>અંતિમ ઉર્જા $U_f$ એ કુલ કેપેસિટન્સ અને સામાન્ય સ્થિતિમાનનો ઉપયોગ કરીને શોધી શકાય છે:</p>
+                                    <p>$$U_f = \\frac{1}{2} C_{\\text{total}} V_{\\text{common}}^2$$</p>
+                                    <p>$$U_f = \\frac{1}{2} (1800 \\times 10^{-12}) (50)^2 = \\frac{1}{2} \\times 1800 \\times 10^{-12} \\times 2500 = 2.25 \\times 10^{-6} \\text{ J}$$</p>
+
+                                    <p><strong>ઉર્જામાં ગુમાવાયેલ જથ્થો (Energy Loss):</strong></p>
+                                    <p>ઉર્જામાં ગુમાવાયેલ જથ્થો પ્રારંભિક ઉર્જા અને અંતિમ ઉર્જા વચ્ચેનો તફાવત છે:</p>
+                                    <p>$$\\Delta U = U_1 - U_f$$</p>
+                                    <p>$$\\Delta U = 4.5 \\times 10^{-6} \\text{ J} - 2.25 \\times 10^{-6} \\text{ J}$$</p>
+                                    <p>$$\\Delta U = 2.25 \\times 10^{-6} \\text{ J}$$</p>
+                                    <p>આમ, આ પ્રક્રિયામાં $2.25 \\times 10^{-6}$ J ઉર્જા ગુમાવાઈ હશે.</p>
+                                `
+                            },
+                            {
+                                question: "2$\\mu$F, 3$\\mu$F અને 4$\\mu$F કેપેસિટન્સના ત્રણ કેપેસિટરોને સમાંતરમાં જોડેલ છે. તો સંયોજનનું કુલ કેપેસિટન્સ કેટલું થાય?",
+                                options: ["$\\frac{13}{12}\\mu$F", "$\\frac{12}{13}\\mu$F", "9$\\mu$F", "12$\\mu$F"],
+                                answer: 2,
+                                solution: `
+                                    <p>જ્યારે કેપેસિટરોને સમાંતરમાં જોડવામાં આવે છે, ત્યારે કુલ કેપેસિટન્સ (સમકક્ષ કેપેસિટન્સ) એ વ્યક્તિગત કેપેસિટન્સનો સરવાળો હોય છે.</p>
+                                    <p>અહીં આપેલ કેપેસિટન્સ છે:</p>
+                                    <ul>
+                                        <li>$C_1 = 2 \\mu\\text{F}$</li>
+                                        <li>$C_2 = 3 \\mu\\text{F}$</li>
+                                        <li>$C_3 = 4 \\mu\\text{F}$</li>
+                                    </ul>
+                                    <p>સમાંતર જોડાણ માટેનું સૂત્ર:</p>
+                                    <p>$$C_{\\text{eq}} = C_1 + C_2 + C_3$$</p>
+                                    <p>કિંમતો મૂકીએ:</p>
+                                    <p>$$C_{\\text{eq}} = 2 \\mu\\text{F} + 3 \\mu\\text{F} + 4 \\mu\\text{F}$$</p>
+                                    <p>$$C_{\\text{eq}} = 9 \\mu\\text{F}$$</p>
+                                    <p>આથી, સંયોજનનું કુલ કેપેસિટન્સ 9$\\mu$F થાય છે.</p>
+                                `
+                            }
+                        ]
+                    },
+                    {
+                        id: 'chapter2-pyqjune2025',
+                        name: 'PYQ જૂન 2025',
+                        questions: [
+                            {
+                                question: "આકૃતિઓ (a) અને (b) અનુક્રમે ધન અને ઋણ વિદ્યુતભારોની ક્ષેત્ર રેખાઓ દર્શાવે છે. આકૃતિઓ પરથી સ્થિતિમાન તફાવત $V_Q - V_P$ અને $V_A - V_B$ નાં ચિન્હો અનુક્રમે ______ , ______ છે.",
+                                options: ["ઋણ, ધન", "ઋણ, ઋણ", "ધન, ઋણ", "ધન, ધન"],
+                                answer: 0,
+                                imageUrl: "image_630175.png-23feb8f6-b53b-4b12-b7bb-13063fae0b26",
+                                solution: `
+                                    <p>વિદ્યુતક્ષેત્ર રેખાઓ હંમેશા ઉચ્ચ સ્થિતિમાનથી નીચલા સ્થિતિમાન તરફ જાય છે.</p>
+                                    <ul>
+                                        <li>આકૃતિ (a) માં, ધન વિદ્યુતભાર છે. ક્ષેત્ર રેખાઓ ધન વિદ્યુતભારથી દૂર જાય છે. P બિંદુ Q કરતાં વિદ્યુતભારની નજીક છે. તેથી, $V_P > V_Q$. આથી, $V_Q - V_P$ ઋણ હશે.</li>
+                                        <li>આકૃતિ (b) માં, ઋણ વિદ્યુતભાર છે. ક્ષેત્ર રેખાઓ ઋણ વિદ્યુતભાર તરફ આવે છે. B બિંદુ A કરતાં વિદ્યુતભારની નજીક છે. તેથી, $V_B < V_A$ (કારણ કે ઋણ વિદ્યુતભારની નજીક સ્થિતિમાન વધુ ઋણ હોય છે). આથી, $V_A - V_B$ ધન હશે.</li>
+                                    </ul>
+                                    <p>આમ, $V_Q - V_P$ ઋણ અને $V_A - V_B$ ધન હશે.</p>
+                                `
+                            },
+                            {
+                                question: "2pF, 3pF અને 4pF કેપેસિટન્સના ત્રણ કેપેસિટરોને શ્રેણીમાં જોડેલ છે તો સંયોજનનું કુલ કેપેસિટન્સ કેટલું હશે?",
+                                options: ["24 pF", "$\\frac{12}{13}$pF", "9 pF", "$\\frac{13}{12}$pF"],
+                                answer: 1,
+                                solution: `
+                                    <p>જ્યારે કેપેસિટરોને શ્રેણીમાં જોડવામાં આવે છે, ત્યારે સમકક્ષ કેપેસિટન્સ (C_eq) નીચેના સૂત્ર દ્વારા આપવામાં આવે છે:</p>
+                                    <p>$$\\frac{1}{C_{\\text{eq}}} = \\frac{1}{C_1} + \\frac{1}{C_2} + \\frac{1}{C_3}$$</p>
+                                    <p>અહીં $C_1 = 2\\text{ pF}$, $C_2 = 3\\text{ pF}$, અને $C_3 = 4\\text{ pF}$ છે.</p>
+                                    <p>$$\\frac{1}{C_{\\text{eq}}} = \\frac{6}{12} + \\frac{4}{12} + \\frac{3}{12}$$</p>
+                                    <p>લ.સા.અ. (LCM) 12 છે:</p>
+                                    <p>$$\\frac{1}{C_{\\text{eq}}} = \\frac{6 + 4 + 3}{12} = \\frac{13}{12}$$</p>
+                                    <p>તેથી,</p>
+                                    <p>$$C_{\\text{eq}} = \\frac{12}{13}\\text{ pF}$$</p>
+                                    <p>આમ, સંયોજનનું કુલ કેપેસિટન્સ $\\frac{12}{13}$pF થશે.</p>
+                                `
+                            },
+                            {
+                                question: "વિદ્યુતક્ષેત્રની ઊર્જા ઘનતા $U = \\frac{1}{2}\\epsilon_0 E^2$ નું પારિમાણિક સૂત્ર ______ . (જ્યાં, $\\epsilon_0$ એ મુક્ત અવકાશનો પરાવૈદ્યુતાક અને E વિદ્યુતક્ષેત્ર છે)",
+                                options: ["M$^1$L$^{-3}$T$^0$A$^0$", "M$^0$L$^1$T$^{-2}$A$^{-1}$", "M$^1$L$^{-1}$T$^{-2}$A$^0$", "M$^1$L$^2$T$^2$A$^1$"],
+                                answer: 2,
+                                imageUrl: "image_63011e.png-61126f4e-b53b-4b12-b7bb-13063fae0b26",
+                                solution: `
+                                    <p>વિદ્યુતક્ષેત્રની ઊર્જા ઘનતા (Energy Density) નું સૂત્ર $U = \\frac{1}{2}\\epsilon_0 E^2$ છે.</p>
+                                    <p>ઊર્જા ઘનતા એટલે એકમ કદ દીઠ ઊર્જા. ઊર્જા (Energy) નું પારિમાણિક સૂત્ર $[M^1 L^2 T^{-2}]$ છે. કદ (Volume) નું પારિમાણિક સૂત્ર $[L^3]$ છે. તેથી, ઊર્જા ઘનતાનું પારિમાણિક સૂત્ર:</p>
+                                    <p>$$[U] = \\frac{[M^1 L^2 T^{-2}]}{[L^3]} = [M^1 L^{-1} T^{-2}]$$</p>
+                                    <p>આપેલા વિકલ્પોમાંથી, વિકલ્પ (C) $[M^1 L^{-1} T^{-2} A^0]$ એ સાચા પારિમાણિક સૂત્ર સાથે મેળ ખાય છે. (જ્યાં $A^0$ એટલે કે તે વિદ્યુત પ્રવાહ પર આધારિત નથી).</p>
+                                `
+                            },
+                            {
+                                question: "$\\vec{P}$ જેટલી ડાયપોલ ચાકમાત્રા ધરાવતી એક વિદ્યુત ડાયપોલ $\\vec{E}$ જેટલા સમાન વિદ્યુતક્ષેત્ર સાથે $\\theta$ ખૂણે રહેલી હોય તો તેના પર લાગતું ટોર્ક $\\vec{\\tau} = ______$.",
+                                options: ["$2aq\\vec{E}$", "$\\vec{P} \\times \\vec{E}$", "$q\\vec{E}$", "$\\vec{E} \\times \\vec{P}$"],
+                                answer: 1,
+                                imageUrl: "image_6300d8.png-6fe605ef-cc83-4fbb-b78b-fb1e92941833",
+                                solution: `
+                                    <p>વિદ્યુત ડાયપોલ પર લાગતું ટોર્ક ($\\vec{\\tau}$) નું સૂત્ર ડાયપોલ મોમેન્ટ $\\vec{P}$ અને વિદ્યુતક્ષેત્ર $\\vec{E}$ ના સદિશ ગુણાકાર દ્વારા આપવામાં આવે છે.</p>
+                                    <p>$$\\vec{\\tau} = \\vec{P} \\times \\vec{E}$$</p>
+                                    <p>આ સૂત્ર દર્શાવે છે કે ટોર્ક એ ડાયપોલ મોમેન્ટ અને વિદ્યુતક્ષેત્ર બંનેને લંબ હોય છે, અને તે ડાયપોલને વિદ્યુતક્ષેત્રની દિશામાં ગોઠવવાનો પ્રયાસ કરે છે.</p>
+                                    <p>આથી, સાચો વિકલ્પ (B) $\\vec{P} \\times \\vec{E}$ છે.</p>
+                                `
+                            }
+                        ]
+                    },
+                    {
+                        id: 'chapter2-pyqjuly2025',
+                        name: 'PYQ જુલાઈ 2025',
+                        questions: [
+                            {
+                                question: "શૂન્યવકાશની પરમિટિવિટી (પરાવૈદ્યુતાક) નો S.I. એકમ ______ છે.",
+                                options: ["Fm$^{-1}$", "Fm$^{-2}$", "Fm$^{-3}$", "Fm"],
+                                answer: 0,
+                                imageUrl: "image_62f19f.png-5e551e76-22bc-44bd-9fb4-dbd7a1e89772",
+                                solution: `
+                                    <p>શૂન્યવકાશની પરમિટિવિટી (Permittivity of free space), જેને $\\epsilon_0$ વડે દર્શાવવામાં આવે છે, તે વિદ્યુતક્ષેત્રમાં વિદ્યુતભારો વચ્ચેના બળને અસર કરતી માધ્યમની ક્ષમતાનું માપ છે.</p>
+                                    <p>કેપેસિટન્સના સૂત્ર પરથી, આપણે $\\epsilon_0$ નો SI એકમ મેળવી શકીએ છીએ.</p>
+                                    <p>સમાંતર પ્લેટ કેપેસિટરનું કેપેસિટન્સ (C) નું સૂત્ર:</p>
+                                    <p>$$C = \\frac{\\epsilon_0 A}{d}$$</p>
+                                    <p>જ્યાં,</p>
+                                    <ul>
+                                        <li>$C$ = કેપેસિટન્સ (એકમ: ફેરાડ, F)</li>
+                                        <li>$A$ = પ્લેટોનું ક્ષેત્રફળ (એકમ: m$^2$)</li>
+                                        <li>$d$ = પ્લેટો વચ્ચેનું અંતર (એકમ: m)</li>
+                                    </ul>
+                                    <p>સૂત્રને $\\epsilon_0$ માટે ગોઠવીએ:</p>
+                                    <p>$$\\epsilon_0 = \\frac{C d}{A}$$</p>
+                                    <p>હવે, એકમો મૂકીએ:</p>
+                                    <p>$$\\text{એકમ}(\\epsilon_0) = \\frac{\\text{F} \\cdot \\text{m}}{\\text{m}^2} = \\text{F} \\cdot \\text{m}^{-1}$$</p>
+                                    <p>આથી, શૂન્યવકાશની પરમિટિવિટીનો S.I. એકમ Fm$^{-1}$ છે.</p>
+                                `
+                            },
+                            {
+                                question: "4$\\mu$F ના ત્રણ કેપેસિટરોને એવી રીતે જોડવામાં આવેલા છે કે જેથી તેનું પરિણામી કેપેસિટન્સ 6$\\mu$F મળે તો તેમનું જોડાણ ______.",
+                                options: ["બે સમાંતર અને તેની સાથે એક શ્રેણીમાં", "બધા શ્રેણીમાં", "બધા સમાંતરમાં", "બે શ્રેણીમાં અને તેની સાથે એક સમાંતરમાં"],
+                                answer: 3,
+                                imageUrl: "image_62eeb7.png-29a28ec2-df14-44d2-974e-d453edde2388",
+                                solution: `
+                                    <p>આ પ્રશ્નનો ઉકેલ કેપેસિટરોના શ્રેણી અને સમાંતર જોડાણના નિયમોનો ઉપયોગ કરીને કરી શકાય છે.</p>
+                                    <p>આપણી પાસે 4$\\mu$F ના ત્રણ કેપેસિટરો છે અને આપણે 6$\\mu$F નું પરિણામી કેપેસિટન્સ મેળવવું છે.</p>
+                                    <p>ચાલો દરેક વિકલ્પને ચકાસીએ:</p>
+                                    <ul>
+                                        <li><strong>(A) બે સમાંતર અને તેની સાથે એક શ્રેણીમાં:</strong><br>જો બે કેપેસિટરો સમાંતરમાં હોય, તો તેમનું સમકક્ષ કેપેસિટન્સ $C_p = C_1 + C_2 = 4\\mu\\text{F} + 4\\mu\\text{F} = 8\\mu\\text{F}$.<br>હવે, આ 8$\\mu$F ને ત્રીજા 4$\\mu$F કેપેસિટર સાથે શ્રેણીમાં જોડીએ:<br>$$\\frac{1}{C_{\\text{eq}}} = \\frac{1}{8} + \\frac{1}{4} = \\frac{1+2}{8} = \\frac{3}{8}$$<br>$$C_{\\text{eq}} = \\frac{8}{3}\\mu\\text{F} \\approx 2.67\\mu\\text{F}$$<br>આ 6$\\mu$F નથી.</li>
+                                        <li><strong>(B) બધા શ્રેણીમાં:</strong><br>$$\\frac{1}{C_{\\text{eq}}} = \\frac{1}{4} + \\frac{1}{4} + \\frac{1}{4} = \\frac{3}{4}$$<br>$$C_{\\text{eq}} = \\frac{4}{3}\\mu\\text{F} \\approx 1.33\\mu\\text{F}$$<br>આ 6$\\mu$F નથી.</li>
+                                        <li><strong>(C) બધા સમાંતરમાં:</strong><br>$$C_{\\text{eq}} = 4\\mu\\text{F} + 4\\mu\\text{F} + 4\\mu\\text{F} = 12\\mu\\text{F}$$<br>આ 6$\\mu$F નથી.</li>
+                                        <li><strong>(D) બે શ્રેણીમાં અને તેની સાથે એક સમાંતરમાં:</strong><br>જો બે કેપેસિટરો શ્રેણીમાં હોય, તો તેમનું સમકક્ષ કેપેસિટન્સ $C_s = \\frac{1}{1/4 + 1/4} = \\frac{1}{2/4} = \\frac{1}{1/2} = 2\\mu\\text{F}$.<br>હવે, આ 2$\\mu$F ને ત્રીજા 4$\\mu$F કેપેસિટર સાથે સમાંતરમાં જોડીએ:<br>$$C_{\\text{eq}} = C_s + C_3 = 2\\mu\\text{F} + 4\\mu\\text{F} = 6\\mu\\text{F}$$<br>આ 6$\\mu$F છે.</li>
+                                    </ul>
+                                    <p>આથી, સાચો વિકલ્પ (D) "બે શ્રેણીમાં અને તેની સાથે એક સમાંતરમાં" છે.</p>
+                                `
+                            }
+                        ]
+                    },
+                    {
+                        id: 'chapter2-pyqgujcet2025',
+                        name: 'PYQ GUJCET 2025',
+                        questions: [
+                            {
+                                question: "2l લંબાઈના ચોરસના શિરોબિંદુઓ પર +q, +q, -q અને -q વીજભારો આકૃતિમાં દર્શાવ્યા પ્રમાણે ગોઠવેલ છે. +q અને +q વીજભારોના મધ્યબિંદુ 'A' પાસે કુલ વીજ સ્થિતિમાન, ______ .",
+                                options: ["$\\frac{kq}{l} [1 - \\frac{1}{\\sqrt{5}}]$", "$\\frac{2kq}{l} [1 + \\frac{1}{\\sqrt{5}}]$", "$\\frac{2kq}{l} [1 - \\frac{1}{\\sqrt{5}}]$", "શૂન્ય"],
+                                answer: 2,
+                                imageUrl: "image_629c1a.jpg-fbe7b199-c37c-42ce-9709-b2cc568edd03",
+                                solution: `
+                                    <p>આકૃતિ મુજબ, ચોરસની બાજુની લંબાઈ $2l$ છે.</p>
+                                    <p>બિંદુ A એ ઉપરના ડાબા ખૂણામાં રહેલા +q અને નીચેના ડાબા ખૂણામાં રહેલા +q વિદ્યુતભારોનું મધ્યબિંદુ છે. તેથી, A થી દરેક +q વિદ્યુતભારનું અંતર $l$ છે.</p>
+                                    <p>ઉપરના જમણા ખૂણામાં -q વિદ્યુતભાર છે. A થી આ -q વિદ્યુતભારનું અંતર શોધવા માટે, આપણે પાયથાગોરસ પ્રમેયનો ઉપયોગ કરીશું.</p>
+                                    <p>આડા અંતર $2l$ અને ઊભા અંતર $l$ સાથે, વિકર્ણનું અંતર $r_1 = \\sqrt{(2l)^2 + l^2} = \\sqrt{4l^2 + l^2} = \\sqrt{5l^2} = \\sqrt{5}l$ થશે.</p>
+                                    <p>નીચેના જમણા ખૂણામાં -q વિદ્યુતભાર છે. A થી આ -q વિદ્યુતભારનું અંતર શોધવા માટે, આપણે પાયથાગોરસ પ્રમેયનો ઉપયોગ કરીશું.</p>
+                                    <p>આડા અંતર $2l$ અને ઊભા અંતર $l$ સાથે, વિકર્ણનું અંતર $r_2 = \\sqrt{(2l)^2 + l^2} = \\sqrt{4l^2 + l^2} = \\sqrt{5l^2} = \\sqrt{5}l$ થશે.</p>
+                                    <p>બિંદુ A પર કુલ વિદ્યુત સ્થિતિમાન (V) એ દરેક વિદ્યુતભારને કારણે ઉદ્ભવતા સ્થિતિમાનનો સરવાળો હશે:</p>
+                                    <p>$$V_A = \\frac{k(+q)}{l} + \\frac{k(+q)}{l} + \\frac{k(-q)}{\\sqrt{5}l} + \\frac{k(-q)}{\\sqrt{5}l}$$</p>
+                                    <p>$$V_A = \\frac{kq}{l} + \\frac{kq}{l} - \\frac{kq}{\\sqrt{5}l} - \\frac{kq}{\\sqrt{5}l}$$</p>
+                                    <p>$$V_A = \\frac{2kq}{l} - \\frac{2kq}{\\sqrt{5}l}$$</p>
+                                    <p>$$V_A = \\frac{2kq}{l} \\left(1 - \\frac{1}{\\sqrt{5}}\\right)$$</p>
+                                    <p>આથી, બિંદુ 'A' પાસે કુલ વીજ સ્થિતિમાન $\\frac{2kq}{l} [1 - \\frac{1}{\\sqrt{5}}]$ થશે.</p>
+                                `
+                            },
+                            {
+                                question: "R ત્રિજ્યાના એક ગોળાકાર સુવાહકની સપાટી પર $1.6 \\times 10^{-7}$C વિદ્યુતભાર નિયમિત રીતે વિતરિત થયેલ છે. સુવાહકની અંદરના વિસ્તારમાં મળતા વિદ્યુતસ્થિતિમાન અને સપાટી પર મળતા વિદ્યુતક્ષેત્રની તીવ્રતાનો ગુણોત્તર ______ .",
+                                options: ["$1.6 \\times 10^{-7}$R", "R", "$\\frac{1}{R}$", "$1.6 \\times 10^{-7}R^2$"],
+                                answer: 1,
+                                solution: `
+                                    <p>પોલા ગોળાકાર સુવાહક માટે:</p>
+                                    <ul>
+                                        <li><strong>સુવાહકની અંદરના વિસ્તારમાં વિદ્યુત સ્થિતિમાન (V_in):</strong> પોલા ગોળાકાર સુવાહકની અંદરના ભાગમાં વિદ્યુતક્ષેત્ર શૂન્ય હોય છે, તેથી વિદ્યુત સ્થિતિમાન સમગ્ર અંદરના ભાગમાં અને સપાટી પર અચળ હોય છે. તે સપાટી પરના સ્થિતિમાન જેટલું જ હોય છે.<br>$$V_{\\text{in}} = V_{\\text{surface}} = \\frac{kQ}{R}$$<br>જ્યાં $Q$ એ વિદ્યુતભાર છે અને $R$ એ ત્રિજ્યા છે.</li>
+                                        <li><strong>સપાટી પર વિદ્યુતક્ષેત્રની તીવ્રતા (E_surface):</strong> ગોળાકાર સુવાહકની સપાટી પર વિદ્યુતક્ષેત્રની તીવ્રતાનું સૂત્ર છે:<br>$$E_{\\text{surface}} = \\frac{kQ}{R^2}$$</li>
+                                    </ul>
+                                    <p>હવે, વિદ્યુતસ્થિતિમાન અને વિદ્યુતક્ષેત્રની તીવ્રતાનો ગુણોત્તર શોધીએ:</p>
+                                    <p>$$\\frac{V_{\\text{in}}}{E_{\\text{surface}}} = \\frac{\\frac{kQ}{R}}{\\frac{kQ}{R^2}}$$</p>
+                                    <p>$$\\frac{V_{\\text{in}}}{E_{\\text{surface}}} = \\frac{kQ}{R} \\times \\frac{R^2}{kQ}$$</p>
+                                    <p>$$\\frac{V_{\\text{in}}}{E_{\\text{surface}}} = R$$</p>
+                                    <p>આથી, સુવાહકની અંદરના વિસ્તારમાં મળતા વિદ્યુતસ્થિતિમાન અને સપાટી પર મળતા વિદ્યુતક્ષેત્રની તીવ્રતાનો ગુણોત્તર R થશે.</p>
+                                `
+                            },
+                            {
+                                question: "સમાંતર પ્લેટ કેપેસિટરની બે પ્લેટો વચ્ચે વિદ્યુત સ્થિતિમાનનો તફાવત 2V છે. આકૃતિમાં દર્શાવ્યા પ્રમાણે P અને Q પાસે ઇલેક્ટ્રોન મુકેલ છે. તો, ______ .",
+                                options: ["P બિંદુ પાસે રહેલા ઇલેક્ટ્રોન પર લાગતું વિદ્યુતબળ Q બિંદુ પાસે રહેલા ઇલેક્ટ્રોન કરતાં ઓછું હશે.", "P બિંદુ પાસે રહેલા ઇલેક્ટ્રોન પર લાગતું વિદ્યુતબળ Q બિંદુ પાસે રહેલા ઇલેક્ટ્રોન કરતાં વધુ હશે.", "બંને ઇલેક્ટ્રોન પર લાગતાં વિદ્યુતબળો શૂન્ય હશે.", "બંને ઇલેક્ટ્રોન પર લાગતાં વિદ્યુતબળો સમાન હશે."],
+                                answer: 3,
+                                imageUrl: "image_629b81.jpg-5517aa7b-fb75-4cee-8c02-9d20fa55fecb",
+                                solution: `
+                                    <p>સમાંતર પ્લેટ કેપેસિટરની પ્લેટો વચ્ચે વિદ્યુતક્ષેત્ર (E) સમાન અને અચળ હોય છે, જો પ્લેટો વચ્ચેનું અંતર પ્લેટોના ક્ષેત્રફળની સરખામણીમાં ઓછું હોય અને કિનારીની અસરોને અવગણવામાં આવે.</p>
+                                    <p>વિદ્યુતક્ષેત્રમાં વિદ્યુતભાર પર લાગતું બળ (F) નું સૂત્ર $F = qE$ છે.</p>
+                                    <p>અહીં, P અને Q બંને બિંદુઓ સમાન વિદ્યુતક્ષેત્રમાં આવેલા છે, કારણ કે તે સમાંતર પ્લેટ કેપેસિટરની અંદર છે જ્યાં વિદ્યુતક્ષેત્ર સમાન હોય છે. બંને બિંદુઓ પર ઇલેક્ટ્રોન (સમાન વિદ્યુતભાર $q = -e$) મુકેલા છે.</p>
+                                    <p>જેમ કે,</p>
+                                    <ul>
+                                        <li>ઇલેક્ટ્રોનનો વિદ્યુતભાર ($q$) બંને માટે સમાન છે.</li>
+                                        <li>વિદ્યુતક્ષેત્ર ($E$) સમાંતર પ્લેટો વચ્ચે દરેક બિંદુએ સમાન છે.</li>
+                                    </ul>
+                                    <p>તેથી, બંને ઇલેક્ટ્રોન પર લાગતું વિદ્યુતબળ સમાન હશે.</p>
+                                    <p>આથી, વિકલ્પ (D) "બંને ઇલેક્ટ્રોન પર લાગતાં વિદ્યુતબળો સમાન હશે" એ સાચો જવાબ છે.</p>
+                                `
+                            }
+                        ]
+                    },
+                    {
+                        id: 'chapter2-pyqmarch2024',
+                        name: 'PYQ માર્ચ 2024',
+                        questions: [
+                            {
+                                question: "r ત્રિજ્યાવાળા વર્તુળાકાર માર્ગના કેન્દ્ર પર +Q વિદ્યુતભાર મુકેલ છે. આ વર્તુળાકાર માર્ગના કોઈ એક વ્યાસના એક અંત્યબિંદુથી બીજા અંત્યબિંદુ સુધી +q વિદ્યુતભારને લઈ જવા માટે +Q વિદ્યુતભાર વડે ઉદ્ભવતા વિદ્યુતક્ષેત્ર વડે થતું કાર્ય ______ હશે.",
+                                options: ["$\\frac{2kQq}{r}$", "$\\frac{kQq}{2r}$", "શૂન્ય", "$\\frac{kQq}{r}$"],
+                                answer: 2,
+                                imageUrl: "image_6297c4.png-467a1e70-08bd-40cb-946e-9a78dd8ce0ff",
+                                solution: `
+                                    <p>વિદ્યુતક્ષેત્ર દ્વારા થતું કાર્ય (W) એ વિદ્યુત સ્થિતિમાનના તફાવત અને વિદ્યુતભારના ગુણાકાર જેટલું હોય છે: $W = q \\Delta V = q(V_f - V_i)$</p>
+                                    <p>અહીં, +Q વિદ્યુતભાર વર્તુળાકાર માર્ગના કેન્દ્ર પર છે. વર્તુળાકાર માર્ગ પરના દરેક બિંદુએ +Q વિદ્યુતભારને કારણે ઉદ્ભવતું વિદ્યુત સ્થિતિમાન સમાન હોય છે, કારણ કે દરેક બિંદુનું કેન્દ્રથી અંતર (ત્રિજ્યા r) સમાન છે.</p>
+                                    <p>એક વ્યાસના એક અંત્યબિંદુથી બીજા અંત્યબિંદુ સુધી +q વિદ્યુતભારને લઈ જવામાં આવે છે. આ બંને અંત્યબિંદુઓ વર્તુળની સપાટી પર આવેલા છે અને કેન્દ્રથી સમાન અંતરે r પર છે.</p>
+                                    <p>તેથી, પ્રારંભિક બિંદુ (i) અને અંતિમ બિંદુ (f) પર વિદ્યુત સ્થિતિમાન સમાન હશે: $V_i = V_f = \\frac{kQ}{r}$</p>
+                                    <p>આથી, વિદ્યુત સ્થિતિમાનનો તફાવત $\\Delta V = V_f - V_i = \\frac{kQ}{r} - \\frac{kQ}{r} = 0$ થશે.</p>
+                                    <p>તેથી, વિદ્યુતક્ષેત્ર દ્વારા થતું કાર્ય:</p>
+                                    <p>$$W = q \\Delta V = q \\times 0 = 0$$</p>
+                                    <p>આથી, +Q વિદ્યુતભાર વડે ઉદ્ભવતા વિદ્યુતક્ષેત્ર વડે થતું કાર્ય શૂન્ય હશે.</p>
+                                `
+                            },
+                            {
+                                question: "સુવાહકને વિદ્યુતક્ષેત્રમાં મુકતાં પ્રાપ્ત સ્થિતવિદ્યુત શાસ્ત્રના પરિણામોમાંથી નીચે આપેલ વિકલ્પોમાંથી કયો વિકલ્પ ખોટો છે.",
+                                options: ["સુવાહકના સમગ્ર કદમાં વિદ્યુતસ્થિતિમાન સમાન હોય છે.", "સુવાહકની સપાટી પર વિદ્યુતક્ષેત્ર લંબરૂપે હોય છે.", "સુવાહકના અંદરના વિસ્તારમાં વધારાનો વિદ્યુતભાર હોય છે.", "સુવાહકની અંદર વિદ્યુતક્ષેત્ર શૂન્ય હોય છે."],
+                                answer: 2,
+                                imageUrl: "image_629768.jpg-40903f73-a8ee-44cc-83dd-7288458932a5",
+                                solution: `
+                                    <p>સ્થિતવિદ્યુત શાસ્ત્રમાં સુવાહકોની લાક્ષણિકતાઓ નીચે મુજબ છે:</p>
+                                    <ul>
+                                        <li><strong>સુવાહકના સમગ્ર કદમાં વિદ્યુતસ્થિતિમાન સમાન હોય છે:</strong> આ વિધાન સાચું છે. સુવાહકની અંદર વિદ્યુતક્ષેત્ર શૂન્ય હોવાથી, કોઈ પણ બે બિંદુઓ વચ્ચે સ્થિતિમાનનો તફાવત શૂન્ય હોય છે, એટલે કે સ્થિતિમાન અચળ હોય છે.</li>
+                                        <li><strong>સુવાહકની સપાટી પર વિદ્યુતક્ષેત્ર લંબરૂપે હોય છે:</strong> આ વિધાન પણ સાચું છે. જો વિદ્યુતક્ષેત્રનો કોઈ ઘટક સપાટીને સમાંતર હોય, તો તે મુક્ત વિદ્યુતભારોને ગતિ કરાવશે, જે સ્થાયી સ્થિતિની વિરુદ્ધ છે.</li>
+                                        <li><strong>સુવાહકના અંદરના વિસ્તારમાં વધારાનો વિદ્યુતભાર હોય છે:</strong> આ વિધાન ખોટું છે. ગાઉસના નિયમ મુજબ, સ્થાયી સ્થિતિમાં સુવાહકની અંદરના ભાગમાં ચોખ્ખો વિદ્યુતભાર શૂન્ય હોય છે. કોઈપણ વધારાનો વિદ્યુતભાર હંમેશા સુવાહકની બાહ્ય સપાટી પર રહે છે.</li>
+                                        <li><strong>સુવાહકની અંદર વિદ્યુતક્ષેત્ર શૂન્ય હોય છે:</strong> આ વિધાન સાચું છે. જો સુવાહકની અંદર વિદ્યુતક્ષેત્ર હોય, તો મુક્ત ઇલેક્ટ્રોન ગતિ કરશે, જે સ્થાયી સ્થિતિની વિરુદ્ધ છે.</li>
+                                    </ul>
+                                    <p>આથી, વિકલ્પ (C) "સુવાહકના અંદરના વિસ્તારમાં વધારાનો વિદ્યુતભાર હોય છે" એ ખોટો વિકલ્પ છે.</p>
+                                `
+                            },
+                            {
+                                question: "ચાર્જ કરેલ કેપેસિટરને બેટરીથી અલગ કરી કેપેસિટરની બે પ્લેટ વચ્ચેના અંતરમાં વધારો કરવામાં આવે તો ______ .",
+                                options: ["કેપેસિટરના કેપેસિટન્સમાં વધારો થાય.", "પ્લેટ પરનો વિદ્યુતભાર અચળ રહે.", "બે પ્લેટ વચ્ચેનો વિદ્યુત સ્થિતિમાનનો તફાવત ઘટે.", "પ્લેટ પરનો વિદ્યુતભાર ઘટે."],
+                                answer: 1,
+                                imageUrl: "image_629768.jpg-40903f73-a8ee-44cc-83dd-7288458932a5",
+                                solution: `
+                                    <p>જ્યારે એક ચાર્જ કરેલ કેપેસિટરને બેટરીથી અલગ કરવામાં આવે છે, ત્યારે પ્લેટો પરનો વિદ્યુતભાર (Q) અચળ રહે છે, કારણ કે વિદ્યુતભારને જવા માટે કોઈ માર્ગ નથી.</p>
+                                    <p>સમાંતર પ્લેટ કેપેસિટરનું કેપેસિટન્સ (C) નું સૂત્ર $C = \\frac{\\epsilon_0 A}{d}$ છે, જ્યાં $d$ એ પ્લેટો વચ્ચેનું અંતર છે.</p>
+                                    <p>જો પ્લેટો વચ્ચેના અંતરમાં ($d$) વધારો કરવામાં આવે, તો કેપેસિટન્સ ($C$) ઘટશે.</p>
+                                    <p>વિદ્યુત સ્થિતિમાનનો તફાવત (V) નું સૂત્ર $V = \\frac{Q}{C}$ છે.</p>
+                                    <p>જેમ કે વિદ્યુતભાર (Q) અચળ રહે છે અને કેપેસિટન્સ (C) ઘટે છે, તેથી વિદ્યુત સ્થિતિમાનનો તફાવત (V) વધશે.</p>
+                                    <p>આથી, સાચો વિકલ્પ (B) "પ્લેટ પરનો વિદ્યુતભાર અચળ રહે" છે.</p>
+                                `
+                            },
+                            {
+                                question: "12pF ના એક કેપેસિટરને 50V ની બેટરી સાથે જોડવામાં આવે તો તેમાં સંગ્રહીત ઊર્જા ______ હશે.",
+                                options: ["$3 \\times 10^{-8}$ J", "$1.5 \\times 10^{-6}$ J", "$1.5 \\times 10^{-8}$ J", "$1.5 \\times 10^{-12}$ J"],
+                                answer: 2,
+                                imageUrl: "image_629458.png-8920c213-88bd-4e02-2a64c6ba7061",
+                                solution: `
+                                    <p>કેપેસિટરમાં સંગ્રહિત ઊર્જા (U) નું સૂત્ર નીચે મુજબ છે:</p>
+                                    <p>$$U = \\frac{1}{2} C V^2$$</p>
+                                    <p>જ્યાં,</p>
+                                    <ul>
+                                        <li>$C$ = કેપેસિટન્સ = 12 pF = $12 \\times 10^{-12}$ F</li>
+                                        <li>$V$ = વોલ્ટેજ = 50 V</li>
+                                    </ul>
+                                    <p>કિંમતો મૂકીએ:</p>
+                                    <p>$$U = \\frac{1}{2} \\times (12 \\times 10^{-12} \\text{ F}) \\times (50 \\text{ V})^2$$</p>
+                                    <p>$$U = 6 \\times 10^{-12} \\times 2500$$</p>
+                                    <p>$$U = 15000 \\times 10^{-12}$$</p>
+                                    <p>$$U = 1.5 \\times 10^4 \\times 10^{-12}$$</p>
+                                    <p>$$U = 1.5 \\times 10^{-8} \\text{ J}$$</p>
+                                    <p>આથી, તેમાં સંગ્રહીત ઊર્જા $1.5 \\times 10^{-8}$ J હશે.</p>
+                                `
+                            }
+                        ]
+                    },
+                    {
+                        id: 'chapter2-pyqjuly2024',
+                        name: 'PYQ જુલાઈ 2024',
+                        questions: [
+                            {
+                                question: "9cm ની બાજુવાળા નિયમિત ષટ્કોણના દરેક શિરોબિંદુ પર 5$\\mu$C વિદ્યુતભાર છે. ષટ્કોણના કેન્દ્ર પર વિદ્યુત સ્થિતિમાન ______ V. (K=9$\\times 10^9$Nm$^2$C$^{-2}$)",
+                                options: ["3$\\times 10^7$", "3$\\times 10^6$", "3$\\times 10^5$", "3$\\times 10^8$"],
+                                answer: 1,
+                                imageUrl: "image_219afd.png-20234712-bfac-47ef-962d-0b7fa5d4e1a8",
+                                solution: `
+                                    <p>નિયમિત ષટ્કોણના કેન્દ્ર પર વિદ્યુત સ્થિતિમાન શોધવા માટે, આપણે દરેક શિરોબિંદુ પરના વિદ્યુતભારને કારણે ઉદ્ભવતા સ્થિતિમાનનો સરવાળો કરીશું.</p>
+                                    <p>નિયમિત ષટ્કોણના કેન્દ્રથી દરેક શિરોબિંદુનું અંતર તેની બાજુની લંબાઈ જેટલું હોય છે.</p>
+                                    <ul>
+                                        <li>બાજુની લંબાઈ $a = 9 \\text{ cm} = 0.09 \\text{ m}$</li>
+                                        <li>વિદ્યુતભાર $q = 5 \\mu\\text{C} = 5 \\times 10^{-6} \\text{ C}$</li>
+                                        <li>કુલંબનો અચળાંક $k = 9 \\times 10^9 \\text{ Nm}^2\\text{C}^{-2}$</li>
+                                    </ul>
+                                    <p>એક વિદ્યુતભારને કારણે કેન્દ્ર પર સ્થિતિમાન $V' = \\frac{kq}{r}$</p>
+                                    <p>અહીં $r = a = 0.09 \\text{ m}$</p>
+                                    <p>કુલ સ્થિતિમાન (6 વિદ્યુતભારો માટે):</p>
+                                    <p>$$V_{\\text{total}} = 6 \\times \\frac{kq}{a}$$</p>
+                                    <p>$$V_{\\text{total}} = 6 \\times \\frac{(9 \\times 10^9) \\times (5 \\times 10^{-6})}{0.09}$$</p>
+                                    <p>$$V_{\\text{total}} = 6 \\times \\frac{45 \\times 10^3}{0.09}$$</p>
+                                    <p>$$V_{\\text{total}} = 6 \\times 500 \\times 10^3$$</p>
+                                    <p>$$V_{\\text{total}} = 3000 \\times 10^3 = 3 \\times 10^6 \\text{ V}$$</p>
+                                    <p>આથી, ષટ્કોણના કેન્દ્ર પર વિદ્યુત સ્થિતિમાન $3 \\times 10^6$ V થશે.</p>
+                                `
+                            },
+                            {
+                                question: "12pF નું એક કેપેસિટર 50V ની બેટરી સાથે જોડે છે. કેપેસિટરમા સંગ્રહ પામતી સ્થિત વિદ્યુત ઊર્જા ______ J.",
+                                options: ["1.5$\\times 10^{-8}$", "2.5$\\times 10^{-8}$", "1.5$\\times 10^{-10}$", "2.5$\\times 10^{-10}$"],
+                                answer: 0,
+                                imageUrl: "image_219afd.png-20234712-bfac-47ef-962d-0b7fa5d4e1a8",
+                                solution: `
+                                    <p>કેપેસિટરમાં સંગ્રહિત ઊર્જા (U) નું સૂત્ર નીચે મુજબ છે:</p>
+                                    <p>$$U = \\frac{1}{2} C V^2$$</p>
+                                    <p>જ્યાં,</p>
+                                    <ul>
+                                        <li>$C$ = કેપેસિટન્સ = 12 pF = $12 \\times 10^{-12}$ F</li>
+                                        <li>$V$ = વોલ્ટેજ = 50 V</li>
+                                    </ul>
+                                    <p>કિંમતો મૂકીએ:</p>
+                                    <p>$$U = \\frac{1}{2} \\times (12 \\times 10^{-12} \\text{ F}) \\times (50 \\text{ V})^2$$</p>
+                                    <p>$$U = 6 \\times 10^{-12} \\times 2500$$</p>
+                                    <p>$$U = 15000 \\times 10^{-12}$$</p>
+                                    <p>$$U = 1.5 \\times 10^4 \\times 10^{-12}$$</p>
+                                    <p>$$U = 1.5 \\times 10^{-8} \\text{ J}$$</p>
+                                    <p>આથી, તેમાં સંગ્રહીત ઊર્જા $1.5 \\times 10^{-8}$ J હશે.</p>
+                                `
+                            },
+                            {
+                                question: "સમાંતર પ્લેટ કેપેસિટરની સીમિત ક્ષેત્રફળની પ્લેટો માટે, કિનારીઓ પાસે વિદ્યુતક્ષેત્ર રેખાઓ બહાર તરફ વળે છે. આ ઘટનાને ______ કહે છે.",
+                                options: ["સ્થિતવિદ્યુત શીલ્ડીંગ", "ધ્રુવીભવન", "ફે-રિંગ વોલ્ટ એન્ડ ફિલ્ડ્સ", "વિવર્તન"],
+                                answer: 1,
+                                imageUrl: "image_219afd.png-20234712-bfac-47ef-962d-0b7fa5d4e1a8",
+                                solution: `
+                                    <p>સમાંતર પ્લેટ કેપેસિટરની સીમિત ક્ષેત્રફળની પ્લેટો માટે, કિનારીઓ પાસે વિદ્યુતક્ષેત્ર રેખાઓ બહાર તરફ વળે છે. આ ઘટનાને <strong>ફ્રિન્જિંગ ઇફેક્ટ (Fringing Effect)</strong> કહેવામાં આવે છે. આ અસરને કારણે વિદ્યુતક્ષેત્ર પ્લેટો વચ્ચે સમાન રહેતું નથી, ખાસ કરીને કિનારીઓ પાસે.</p>
+                                    <p>આપેલા વિકલ્પોમાંથી:</p>
+                                    <ul>
+                                        <li><strong>(A) સ્થિતવિદ્યુત શીલ્ડીંગ (Electrostatic shielding):</strong> આ એક એવી ઘટના છે જેમાં કોઈ વિસ્તારને બાહ્ય વિદ્યુતક્ષેત્રોથી સુરક્ષિત કરવામાં આવે છે.</li>
+                                        <li><strong>(B) ધ્રુવીભવન (Polarization):</strong> આ એવી ઘટના છે જેમાં ડાઇઇલેક્ટ્રિક પદાર્થમાં વિદ્યુતક્ષેત્ર લાગુ પાડવાથી તેના અણુઓના ધ્રુવો ગોઠવાય છે.</li>
+                                        <li><strong>(C) ફે-રિંગ વોલ્ટ એન્ડ ફિલ્ડ્સ (Fringing fields):</strong> આ અંગ્રેજી શબ્દ 'Fringing fields' નો ગુજરાતી લિપ્યંતરણ છે, જે વર્ણવેલી ઘટના માટેનો સાચો ભૌતિક શબ્દ છે.</li>
+                                        <li><strong>(D) વિવર્તન (Diffraction):</strong> આ તરંગોનો એક ગુણધર્મ છે જેમાં તરંગો અવરોધની કિનારીઓ પાસેથી વળી જાય છે.</li>
+                                    </ul>
+                                    <p>આપેલા વિકલ્પોમાંથી, પ્રશ્નમાં વર્ણવેલી ઘટના માટે સૌથી યોગ્ય ભૌતિક શબ્દ 'Fringing Effect' છે. જોકે, આપેલા વિકલ્પોમાંથી (B) ધ્રુવીભવન હાઇલાઇટ થયેલું છે, જે આ ઘટના માટે સીધો અને સાચો શબ્દ નથી. કદાચ પ્રશ્ન બનાવવામાં અથવા વિકલ્પો આપવામાં કોઈ ભૂલ હોઈ શકે છે. પરંતુ, જો આપેલા વિકલ્પોમાંથી પસંદ કરવાનું હોય અને હાઇલાઇટ કરેલ જવાબને માન્ય રાખવાનો હોય, તો તે (B) છે. જોકે, ભૌતિકશાસ્ત્રની દ્રષ્ટિએ, આ ઘટનાને 'ફ્રિન્જિંગ ઇફેક્ટ' કહેવાય છે.</p>
+                                `
+                            }
+                        ]
+                    },
+                    {
+                        id: 'chapter2-pyqgujcet2024',
+                        name: 'PYQ GUJCET 2024',
+                        questions: [
+                            {
+                                question: "એક વિદ્યુતભારિત પોલા ગોળાની ત્રિજ્યા 10 cm છે. તેની સપાટી પર વિદ્યુતસ્થિતિમાન 100 V છે. તો કેન્દ્રથી 2 cm દૂર વિદ્યુતસ્થિતિમાન ______ હશે.",
+                                options: ["200 V", "1 V", "100 V", "0 V"],
+                                answer: 2,
+                                imageUrl: "image_1316df.png-bfc56a7b-b0f3-4b1f-a686-3e5bee40d69b",
+                                solution: `
+                                    <p>પોલા ગોળાકાર સુવાહકની એક મહત્વની લાક્ષણિકતા એ છે કે તેની અંદરના ભાગમાં વિદ્યુતક્ષેત્ર હંમેશા શૂન્ય હોય છે. વિદ્યુતક્ષેત્ર શૂન્ય હોવાને કારણે, સુવાહકની અંદરના દરેક બિંદુએ વિદ્યુત સ્થિતિમાન સપાટી પરના વિદ્યુત સ્થિતિમાન જેટલું જ હોય છે અને તે અચળ રહે છે.</p>
+                                    <p>અહીં, ગોળાની ત્રિજ્યા R = 10 cm છે.</p>
+                                    <p>સપાટી પર વિદ્યુતસ્થિતિમાન $V_{\\text{surface}} = 100 \\text{ V}$ છે.</p>
+                                    <p>આપણે કેન્દ્રથી 2 cm દૂર (એટલે કે ગોળાની અંદરના ભાગમાં) વિદ્યુતસ્થિતિમાન શોધવાનું છે. કારણ કે 2 cm એ 10 cm કરતા ઓછું છે, બિંદુ ગોળાની અંદર આવેલું છે.</p>
+                                    <p>જેમ કે પોલા સુવાહકની અંદર વિદ્યુતસ્થિતિમાન સપાટી પરના સ્થિતિમાન જેટલું જ રહે છે, તેથી કેન્દ્રથી 2 cm દૂર વિદ્યુતસ્થિતિમાન પણ 100 V જ હશે.</p>
+                                    <p>આથી, સાચો વિકલ્પ (C) 100 V છે.</p>
+                                `
+                            },
+                            {
+                                question: "પ્લેટો વચ્ચે હવા હોય તેવા સમાંતર પ્લેટ કેપેસિટરનું કેપેસિટન્સ 4 pF છે. જો પ્લેટો વચ્ચેનું અંતર અડધું કરવામાં આવે અને તેમની વચ્ચેના અવકાશને ડાઇઇલેક્ટ્રિક અચળાંક 6 ધરાવતા દ્રવ્ય વડે ભરી દેવામાં આવે તો તેનું કેપેસિટન્સ ______ થશે.",
+                                options: ["12 pF", "24 pF", "98 pF", "48 pF"],
+                                answer: 3,
+                                imageUrl: "image_1316df.png-bfc56a7b-b0f3-4b1f-a686-3e5bee40d69b",
+                                solution: `
+                                    <p>શરૂઆતમાં, સમાંતર પ્લેટ કેપેસિટરનું કેપેસિટન્સ હવા સાથે $C_0 = \\frac{\\epsilon_0 A}{d} = 4 \\text{ pF}$ છે.</p>
+                                    <p>હવે, પ્લેટો વચ્ચેનું અંતર અડધું કરવામાં આવે છે, એટલે કે $d' = d/2$.</p>
+                                    <p>અને તેમની વચ્ચેના અવકાશને ડાઇઇલેક્ટ્રિક અચળાંક $K = 6$ ધરાવતા દ્રવ્ય વડે ભરી દેવામાં આવે છે.</p>
+                                    <p>નવું કેપેસિટન્સ $C'$ નું સૂત્ર નીચે મુજબ છે:</p>
+                                    <p>$$C' = \\frac{K \\epsilon_0 A}{d'}$$</p>
+                                    <p>કિંમતો મૂકીએ:</p>
+                                    <p>$$C' = \\frac{K \\epsilon_0 A}{d/2} = \\frac{2K \\epsilon_0 A}{d}$$</p>
+                                    <p>આપણે જાણીએ છીએ કે $C_0 = \\frac{\\epsilon_0 A}{d} = 4 \\text{ pF}$.</p>
+                                    <p>તેથી,</p>
+                                    <p>$$C' = 2K C_0$$</p>
+                                    <p>$$C' = 2 \\times 6 \\times 4 \\text{ pF}$$</p>
+                                    <p>$$C' = 12 \\times 4 \\text{ pF}$$</p>
+                                    <p>$$C' = 48 \\text{ pF}$$</p>
+                                    <p>આથી, નવું કેપેસિટન્સ 48 pF થશે.</p>
+                                `
+                            }
+                        ]
+                    },
+                    {
+                        id: 'chapter2-pyqmarch2023',
+                        name: 'PYQ માર્ચ 2023',
+                        questions: [
+                            {
+                                question: "આકૃતિઓ ધન અને ઋણ વીજભારોની અનુક્રમે ક્ષેત્રરેખાઓ દર્શાવે છે. સ્થિતિમાન તફાવત $V_Q - V_P$ અને $V_B - V_A$ નાં ચિન્હો જણાવો.",
+                                options: ["ઋણ, ધન", "ધન, ઋણ", "ધન, ધન", "ઋણ, ઋણ"],
+                                answer: 0,
+                                imageUrl: "image_1312e2.jpg-d3e6e331-e050-4776-bb63-cbd81aa8549b",
+                                solution: `
+                                    <p>વિદ્યુતક્ષેત્ર રેખાઓ હંમેશા ઉચ્ચ વિદ્યુત સ્થિતિમાનથી નીચલા વિદ્યુત સ્થિતિમાન તરફ ગતિ કરે છે.</p>
+                                    <ul>
+                                        <li><strong>પ્રથમ આકૃતિ (ધન વિદ્યુતભાર):</strong> ક્ષેત્ર રેખાઓ ધન વિદ્યુતભારથી બહાર તરફ જાય છે. P બિંદુ Q કરતાં વિદ્યુતભારની નજીક છે. તેથી, $V_P > V_Q$. આથી, $V_Q - V_P$ ઋણ હશે.</li>
+                                        <li><strong>બીજી આકૃતિ (ઋણ વિદ્યુતભાર):</strong> ક્ષેત્ર રેખાઓ ઋણ વિદ્યુતભાર તરફ આવે છે. B બિંદુ A કરતાં વિદ્યુતભારની નજીક છે. ઋણ વિદ્યુતભારના કિસ્સામાં, વિદ્યુતભારની નજીકનું સ્થિતિમાન વધુ ઋણ હોય છે. તેથી, $V_B < V_A$. આથી, $V_B - V_A$ પણ ઋણ હશે.</li>
+                                    </ul>
+                                    <p>આમ, $V_Q - V_P$ ઋણ અને $V_B - V_A$ ઋણ હશે.</p>
+                                `
+                            },
+                            {
+                                question: "એક વીજભારિત કેપેસિટરની ઊર્જા U છે. હવે બેટરી દૂર કરી તેનો તેવાજ બીજા બે વીજભારરહિત કેપેસિટર સાથે સમાંતરમાં જોડવામાં આવે છે. હવે દરેક કેપેસિટરની ઊર્જા કેટલી થશે?",
+                                options: ["U/4", "3U/2", "U", "U/9"],
+                                answer: 3,
+                                imageUrl: "image_13129e.png-3940b449-50e4-49d3-9cc2-a6e3b89846f4",
+                                solution: `
+                                    <p>ધારો કે પ્રારંભિક કેપેસિટરનું કેપેસિટન્સ C અને વોલ્ટેજ V છે. તેની સંગ્રહિત ઊર્જા $U = \\frac{1}{2}CV^2$ છે.</p>
+                                    <p>જ્યારે બેટરી દૂર કરવામાં આવે છે, ત્યારે કેપેસિટર પરનો વિદ્યુતભાર Q અચળ રહે છે, જ્યાં $Q = CV$.</p>
+                                    <p>હવે, આ કેપેસિટરને તેવા જ બીજા બે વિદ્યુતભારરહિત કેપેસિટરો સાથે સમાંતરમાં જોડવામાં આવે છે. તેથી, કુલ ત્રણ કેપેસિટરો સમાંતરમાં છે, દરેકનું કેપેસિટન્સ C છે。</p>
+                                    <p>કુલ સમકક્ષ કેપેસિટન્સ $C_{\\text{total}} = C + C + C = 3C$ થશે.</p>
+                                    <p>આ જોડાણ પછી, કુલ વિદ્યુતભાર Q એ ત્રણેય કેપેસિટરો વચ્ચે વહેંચાઈ જશે. સમાંતર જોડાણમાં, દરેક કેપેસિટર પર સમાન વોલ્ટેજ લાગુ પડશે.</p>
+                                    <p>નવો સામાન્ય વોલ્ટેજ $V' = \\frac{Q}{C_{\\text{total}}} = \\frac{CV}{3C} = \\frac{V}{3}$ થશે.</p>
+                                    <p>હવે, દરેક કેપેસિટરની ઊર્જા શોધીએ. દરેક કેપેસિટરનું કેપેસિટન્સ C છે અને તેના પર લાગુ પડતો વોલ્ટેજ $V'$ છે.</p>
+                                    <p>દરેક કેપેસિટરની ઊર્જા $U' = \\frac{1}{2} C (V')^2$</p>
+                                    <p>$$U' = \\frac{1}{2} C \\left(\\frac{V}{3}\\right)^2 = \\frac{1}{2} C \\frac{V^2}{9} = \\frac{1}{9} \\left(\\frac{1}{2}CV^2\\right)$$</p>
+                                    <p>જેમ કે $U = \\frac{1}{2}CV^2$, તો</p>
+                                    <p>$$U' = \\frac{U}{9}$$</p>
+                                    <p>આથી, હવે દરેક કેપેસિટરની ઊર્જા U/9 થશે.</p>
+                                `
+                            },
+                            {
+                                question: "સમાન વિદ્યુતક્ષેત્રમાં 2$\\mu$C વીજભારની વિદ્યુત-સ્થિતિમાન ઊર્જા કોઈ બિંદુ પાસે $3 \\times 10^{-5}$ J છે. તો તે બિંદુ પાસેનું વીજસ્થિતિમાન ______ V.",
+                                options: ["5", "15", "6", "શૂન્ય"],
+                                answer: 1,
+                                imageUrl: "image_131240.png-7cf665f5-1efa-4dd9-ba9a-e35a55d68cc3",
+                                solution: `
+                                    <p>વિદ્યુત-સ્થિતિમાન ઊર્જા (U) અને વિદ્યુત સ્થિતિમાન (V) વચ્ચેનો સંબંધ નીચે મુજબ છે:</p>
+                                    <p>$$U = qV$$</p>
+                                    <p>જ્યાં,</p>
+                                    <ul>
+                                        <li>$U$ = વિદ્યુત-સ્થિતિમાન ઊર્જા = $3 \\times 10^{-5}$ J</li>
+                                        <li>$q$ = વિદ્યુતભાર = 2$\\mu$C = $2 \\times 10^{-6}$ C</li>
+                                        <li>$V$ = વિદ્યુત સ્થિતિમાન (જે શોધવાનું છે)</li>
+                                    </ul>
+                                    <p>સૂત્રને V માટે ગોઠવીએ:</p>
+                                    <p>$$V = \\frac{U}{q}$$</p>
+                                    <p>કિંમો મૂકીએ:</p>
+                                    <p>$$V = \\frac{3 \\times 10^{-5} \\text{ J}}{2 \\times 10^{-6} \\text{ C}}$$</p>
+                                    <p>$$V = \\frac{3}{2} \\times 10^{-5 - (-6)}$$</p>
+                                    <p>$$V = 1.5 \\times 10^1$$</p>
+                                    <p>$$V = 15 \\text{ V}$$</p>
+                                    <p>આથી, તે બિંદુ પાસેનું વીજસ્થિતિમાન 15 V થશે.</p>
+                                `
+                            },
+                            {
+                                question: "અશૂન્ય વીજભારોના સમૂહ વડે ખૂબ મોટા અંતરે ઉદ્ભવતા સમસ્થિતિમાન પૃષ્ઠનો આકાર કેવો હોય છે?",
+                                options: ["પરવલય", "સમતલ", "ગોળાકાર", "દીર્ઘવૃત્તીય"],
+                                answer: 2,
+                                solution: `
+                                    <p>અશૂન્ય વિદ્યુતભારોના સમૂહ વડે ખૂબ મોટા અંતરે (એટલે કે જ્યારે અવલોકન બિંદુ વિદ્યુતભારના વિતરણના કદ કરતાં ઘણું દૂર હોય) ઉદ્ભવતા વિદ્યુતક્ષેત્રને બિંદુવત વિદ્યુતભારને કારણે ઉદ્ભવતા વિદ્યુતક્ષેત્ર તરીકે ગણી શકાય છે.</p>
+                                    <p>બિંદુવત વિદ્યુતભાર માટે, સમસ્થિતિમાન પૃષ્ઠો (equipotential surfaces) ગોળાકાર હોય છે, જે કેન્દ્રમાં વિદ્યુતભાર ધરાવે છે.</p>
+                                    <p>આથી, ખૂબ મોટા અંતરે, અશૂન્ય વિદ્યુતભારોના સમૂહ વડે ઉદ્ભવતા સમસ્થિતિમાન પૃષ્ઠનો આકાર ગોળાકાર હોય છે.</p>
+                                `
+                            }
+                        ]
+                    },
+                    {
+                        id: 'chapter2-pyqgujcet2023',
+                        name: 'PYQ GUJCET 2023',
+                        questions: [
+                            {
+                                question: "નીચેની આકૃતિમાં B બિંદુ આગળનું વિદ્યુતસ્થિતિમાન ______ V છે.",
+                                options: ["25", "30", "22", "50"],
+                                answer: 2, // Corrected answer to match solution calculation
+                                imageUrl: "image_12ad04.png-286665af-a867-4225-8459-abdd737e1e99",
+                                solution: `
+                                    <p>આકૃતિમાં, બે કેપેસિટરો શ્રેણીમાં જોડાયેલા છે. $C_1 = 2\\mu F$ અને $C_2 = 3\\mu F$.</p>
+                                    <p>A બિંદુ પર વિદ્યુતસ્થિતિમાન $V_A = 40 \\text{ V}$ છે અને C બિંદુ પર વિદ્યુતસ્થિતિમાન $V_C = 10 \\text{ V}$ છે.</p>
+                                    <p>શ્રેણીમાં જોડાયેલા કેપેસિટરો માટે, દરેક કેપેસિટર પરનો વિદ્યુતભાર સમાન હોય છે.</p>
+                                    <p>કુલ વિદ્યુત સ્થિતિમાનનો તફાવત $V_{AC} = V_A - V_C = 40 - 10 = 30 \\text{ V}$</p>
+                                    <p>શ્રેણીમાં સમકક્ષ કેપેસિટન્સ $C_{eq}$:</p>
+                                    <p>$$\\frac{1}{C_{eq}} = \\frac{1}{C_1} + \\frac{1}{C_2} = \\frac{1}{2\\mu F} + \\frac{1}{3\\mu F} = \\frac{3+2}{6\\mu F} = \\frac{5}{6\\mu F}$$</p>
+                                    <p>$$C_{eq} = \\frac{6}{5}\\mu F = 1.2\\mu F$$</p>
+                                    <p>કુલ વિદ્યુતભાર $Q = C_{eq} V_{AC} = 1.2\\mu F \\times 30 V = 36 \\mu C$$</p>
+                                    <p>હવે, $C_1$ કેપેસિટર પરનો વોલ્ટેજ ડ્રોપ $V_{AB}$ શોધીએ:</p>
+                                    <p>$$V_{AB} = \\frac{Q}{C_1} = \\frac{36 \\mu C}{2 \\mu F} = 18 \\text{ V}$$</p>
+                                    <p>B બિંદુ આગળનું વિદ્યુતસ્થિતિમાન $V_B = V_A - V_{AB}$$</p>
+                                    <p>$$V_B = 40 \\text{ V} - 18 \\text{ V} = 22 \\text{ V}$$</p>
+                                    <p>જોકે, આપેલા વિકલ્પોમાં 22 V નથી. ચાલો ફરીથી ગણતરી કરીએ.</p>
+                                    <p>વિકલ્પોને ધ્યાનમાં રાખીને, જો $V_A = 40V$ અને $V_C = 10V$ હોય, તો $V_B$ એ $V_A$ અને $V_C$ ની વચ્ચે હશે.</p>
+                                    <p>આકૃતિમાં, $C_1$ અને $C_2$ શ્રેણીમાં છે. તેથી, તેમના પરનો વિદ્યુતભાર સમાન હશે.</p>
+                                    <p>$$C_1 (V_A - V_B) = C_2 (V_B - V_C)$$</p>
+                                    <p>$$2(40 - V_B) = 3(V_B - 10)$$</p>
+                                    <p>$$80 - 2V_B = 3V_B - 30$$</p>
+                                    <p>$$80 + 30 = 3V_B + 2V_B$$</p>
+                                    <p>$$110 = 5V_B$$</p>
+                                    <p>$$V_B = \\frac{110}{5} = 22 \\text{ V}$$</p>
+                                    <p>આથી, B બિંદુ આગળનું વિદ્યુતસ્થિતિમાન 22 V છે. આપેલા વિકલ્પોમાં 22 (C) સાચો છે.</p>
+                                `
+                            },
+                            {
+                                question: "10 cm ત્રિજ્યાના વર્તુળના કેન્દ્ર પર Q વિદ્યુતભાર મુકેલો છે. આ વર્તુળની ચાપ પર q વિદ્યુતભારને એક બિંદુથી બીજા બિંદુ સુધી લઈ જવા માટે કરવા પડતું કાર્ય કેટલું હશે?",
+                                options: ["0 J", "KQq J", "0.5 KQq J", "0.1 KQq J"],
+                                answer: 0,
+                                imageUrl: "image_12ad04.png-286665af-a867-4225-8459-abdd737e1e99",
+                                solution: `
+                                    <p>વિદ્યુતક્ષેત્ર દ્વારા થતું કાર્ય (W) એ વિદ્યુત સ્થિતિમાનના તફાવત અને વિદ્યુતભારના ગુણાકાર જેટલું હોય છે: $W = q \\Delta V = q(V_f - V_i)$</p>
+                                    <p>અહીં, Q વિદ્યુતભાર વર્તુળના કેન્દ્ર પર છે. વર્તુળની ચાપ પરના દરેક બિંદુએ Q વિદ્યુતભારને કારણે ઉદ્ભવતું વિદ્યુત સ્થિતિમાન સમાન હોય છે, કારણ કે દરેક બિંદુનું કેન્દ્રથી અંતર (ત્રિજ્યા r) સમાન છે.</p>
+                                    <p>ચાપ પર એક બિંદુથી બીજા બિંદુ સુધી વિદ્યુતભાર q ને લઈ જવામાં આવે છે. આ બંને બિંદુઓ વર્તુળની સપાટી પર આવેલા છે અને કેન્દ્રથી સમાન અંતરે r પર છે.</p>
+                                    <p>તેથી, પ્રારંભિક બિંદુ (i) અને અંતિમ બિંદુ (f) પર વિદ્યુત સ્થિતિમાન સમાન હશે: $V_i = V_f = \\frac{kQ}{r}$</p>
+                                    <p>આથી, વિદ્યુત સ્થિતિમાનનો તફાવત $\\Delta V = V_f - V_i = \\frac{kQ}{r} - \\frac{kQ}{r} = 0$ થશે.</p>
+                                    <p>તેથી, વિદ્યુતક્ષેત્ર દ્વારા થતું કાર્ય:</p>
+                                    <p>$$W = q \\Delta V = q \\times 0 = 0$$</p>
+                                    <p>આથી, Q વિદ્યુતભાર વડે ઉદ્ભવતા વિદ્યુતક્ષેત્ર વડે થતું કાર્ય 0 J હશે.</p>
+                                `
+                            },
+                            {
+                                question: "હવાની ડાઈ ઈલેક્ટ્રીક સ્ટ્રેન્થ ______ છે.",
+                                options: ["3$\\times 10^9$ V/m", "3$\\times 10^9$ V/cm", "3$\\times 10^9$ V/$\\mu$m", "3$\\times 10^9$ V/mm"],
+                                answer: 0,
+                                imageUrl: "image_12ad04.png-286665af-a867-4225-8459-abdd737e1e99",
+                                solution: `
+                                    <p>હવાની ડાઈઇલેક્ટ્રિક સ્ટ્રેન્થ (Dielectric Strength) એ મહત્તમ વિદ્યુતક્ષેત્ર છે જે હવા ભંગાણ (breakdown) થયા વિના સહન કરી શકે છે. આ મૂલ્ય લગભગ $3 \\times 10^6 \\text{ V/m}$ (અથવા $3 \\text{ MV/m}$) હોય છે.</p>
+                                    <p>આપેલા વિકલ્પોમાં, બધા વિકલ્પો $3 \\times 10^9$ ના ગુણાંકમાં છે, જે ખોટું છે. સાચું મૂલ્ય $3 \\times 10^6 \\text{ V/m}$ છે.</p>
+                                    <p>જોકે, આપેલા વિકલ્પોમાંથી, જો આપણે સૌથી નજીકનો વિકલ્પ પસંદ કરીએ અને માની લઈએ કે પ્રશ્નમાં ઘાતમાં ભૂલ છે, તો વિકલ્પ (A) $3 \\times 10^9 \\text{ V/m}$ એ એકમ V/m સાથે સુસંગત છે, ભલે મૂલ્ય ખોટું હોય.</p>
+                                    <p>પરંતુ, જો આપણે સાચા મૂલ્યને ધ્યાનમાં લઈએ, તો $3 \\times 10^6 \\text{ V/m}$ એ સાચો જવાબ છે. આપેલા વિકલ્પોમાં, કોઈ પણ વિકલ્પ $3 \\times 10^6 \\text{ V/m}$ સાથે મેળ ખાતો નથી.</p>
+                                    <p>જોકે, જો પ્રશ્નનો ઉદ્દેશ્ય એકમની સુસંગતતા તપાસવાનો હોય, તો V/m એ SI એકમ છે. પરંતુ મૂલ્ય $3 \\times 10^9$ એ ખોટું છે. સાચું મૂલ્ય $3 \\times 10^6 \\text{ V/m}$ છે.</p>
+                                    <p>આ પ્રશ્નમાં મૂલ્યની દ્રષ્ટિએ ભૂલ હોઈ શકે છે. જો વિકલ્પોમાંથી કોઈ એક પસંદ કરવો હોય, તો એકમ V/m સાથેનો વિકલ્પ (A) પસંદ કરી શકાય છે, પરંતુ મૂલ્ય ખોટું છે.</p>
+                                `
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // --- DOM Elements ---
+        const homePage = document.getElementById('home-page');
+        const chaptersContainer = document.getElementById('chapters-container');
+        const quizPage = document.getElementById('quiz-page');
+        const quizTitle = document.getElementById('quiz-title');
+        const quizDescription = document.getElementById('quiz-description');
+        const resultContainer = document.getElementById('result-container');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const solutionDisplay = document.getElementById('solution-display');
+        const solutionText = document.getElementById('solution-text');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const progressText = document.getElementById('progress');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreText = document.getElementById('score-text');
+        const scorePercentage = document.getElementById('score-percentage');
+        const encouragementText = document.getElementById('encouragement');
+        const questionImage = document.getElementById('question-image');
+        const imagePlaceholder = document.getElementById('image-placeholder');
+        const currentScore = document.getElementById('current-score');
+        const scoreValue = document.getElementById('score-value');
+        const totalQuestions = document.getElementById('total-questions');
+
+        // --- App State ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let currentQuizQuestions = [];
+        let currentChapter = null;
+        let currentQuiz = null;
+        let userAnswers = [];
+
+        // --- Core Functions ---
+
+        function renderMathJax(elements) {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise(elements).catch((err) => console.error('MathJax typesetting failed:', err));
+            }
+        }
+        
+        function renderHomePage() {
+            homePage.classList.remove('hidden');
+            quizPage.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+            chaptersContainer.innerHTML = '';
+
+            chapterData.forEach(chapter => {
+                const chapterCard = document.createElement('div');
+                chapterCard.className = 'chapter-card p-6';
+                
+                let quizButtonsHTML = chapter.quizzes.map(quiz => `
+                    <button class="quiz-btn text-white font-medium py-3 px-4 mb-3"
+                            onclick="loadQuiz('${chapter.id}', '${quiz.id}')">
+                        ${quiz.name} ક્વિઝ શરૂ કરો
+                    </button>
+                `).join('');
+
+                chapterCard.innerHTML = `
+                    <h2 class="text-2xl font-semibold text-slate-800 mb-3">${chapter.name}</h2>
+                    <p class="text-slate-600 mb-4">${chapter.description}</p>
+                    <div class="space-y-3 mt-5">${quizButtonsHTML}</div>
+                `;
+                chaptersContainer.appendChild(chapterCard);
+            });
+        }
+
+        function loadQuiz(chapterId, quizId) {
+            currentChapter = chapterData.find(c => c.id === chapterId);
+            currentQuiz = currentChapter.quizzes.find(q => q.id === quizId);
+            currentQuizQuestions = [...currentQuiz.questions];
+            userAnswers = new Array(currentQuizQuestions.length).fill(null);
+
+            quizTitle.innerText = `${currentChapter.name} : ${currentQuiz.name}`;
+            quizDescription.innerText = currentChapter.description;
+
+            homePage.classList.add('hidden');
+            quizPage.classList.remove('hidden');
+            startQuiz();
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.fill(null);
+            resultContainer.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            prevBtn.classList.add('hidden');
+            currentScore.classList.add('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetState();
+            const currentQuestion = currentQuizQuestions[currentQuestionIndex];
+            
+            if (!currentQuestion) {
+                questionText.innerHTML = "આ ક્વિઝમાં કોઈ પ્રશ્નો નથી. કૃપા કરીને પ્રશ્નો ઉમેરો.";
+                optionsContainer.innerHTML = "";
+                nextBtn.classList.add('hidden');
+                solutionDisplay.classList.add('hidden');
+                progressText.innerHTML = `<strong>પ્રશ્ન 0</strong> / 0`;
+                progressBar.style.width = `0%`;
+                return;
+            }
+
+            // Update progress
+            const progressPercentage = (currentQuestionIndex / currentQuizQuestions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            progressText.innerHTML = `<strong>પ્રશ્ન ${currentQuestionIndex + 1}</strong> / ${currentQuizQuestions.length}`;
+            
+            // Show current score
+            scoreValue.textContent = score;
+            totalQuestions.textContent = currentQuizQuestions.length;
+            currentScore.classList.remove('hidden');
+
+            // Display question text
+            questionText.innerHTML = currentQuestion.question;
+            
+            // Handle image
+            questionImage.classList.add('hidden');
+            imagePlaceholder.classList.add('hidden');
+            
+            if (currentQuestion.imageUrl) {
+                questionImage.src = currentQuestion.imageUrl;
+                questionImage.onload = () => {
+                    questionImage.classList.remove('hidden');
+                };
+                questionImage.onerror = () => {
+                    imagePlaceholder.classList.remove('hidden');
+                };
+            }
+
+            // Display options
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.innerHTML = option;
+                button.classList.add('option-btn', 'w-full', 'p-4', 'text-left', 'bg-white', 'text-slate-700', 'mb-2');
+                
+                // Check if user already answered this question
+                if (userAnswers[currentQuestionIndex] !== null) {
+                    if (userAnswers[currentQuestionIndex] === index) {
+                        if (index === currentQuestion.answer) {
+                            button.classList.add('correct');
+                        } else {
+                            button.classList.add('incorrect');
+                        }
+                    }
+                    if (index === currentQuestion.answer) {
+                        button.classList.add('correct');
+                    }
+                    button.disabled = true;
+                }
+                
+                button.dataset.index = index;
+                button.addEventListener('click', selectAnswer);
+                optionsContainer.appendChild(button);
+            });
+            
+            // Show solution if already answered
+            if (userAnswers[currentQuestionIndex] !== null) {
+                solutionText.innerHTML = currentQuestion.solution;
+                solutionDisplay.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+            }
+            
+            // Show previous button if not first question
+            if (currentQuestionIndex > 0) {
+                prevBtn.classList.remove('hidden');
+            } else {
+                prevBtn.classList.add('hidden');
+            }
+            
+            renderMathJax([questionText, optionsContainer]);
+        }
+
+        function resetState() {
+            nextBtn.classList.add('hidden');
+            solutionDisplay.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+        }
+
+        function selectAnswer(e) {
+            const selectedBtn = e.currentTarget;
+            const selectedIndex = parseInt(selectedBtn.dataset.index);
+            const currentQuestion = currentQuizQuestions[currentQuestionIndex];
+            const correctIndex = currentQuestion.answer;
+            
+            // Save user answer
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            
+            // Update progress bar
+            const newProgressPercentage = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
+            progressBar.style.width = `${newProgressPercentage}%`;
+
+            if (selectedIndex === correctIndex) {
+                selectedBtn.classList.add('correct');
+                score++;
+                scoreValue.textContent = score;
+            } else {
+                selectedBtn.classList.add('incorrect');
+            }
+
+            Array.from(optionsContainer.children).forEach(button => {
+                if (parseInt(button.dataset.index) === correctIndex) {
+                    button.classList.add('correct');
+                }
+                button.disabled = true;
+            });
+            
+            solutionText.innerHTML = currentQuestion.solution;
+            solutionDisplay.classList.remove('hidden');
+            renderMathJax([solutionText]);
+
+            if (currentQuestionIndex < currentQuizQuestions.length) {
+                nextBtn.classList.remove('hidden');
+            }
+        }
+
+        function handleNextButton() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizQuestions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+        
+        function handlePrevButton() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function showScore() {
+            quizPage.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            
+            // Update progress bar to 100%
+            progressBar.style.width = `100%`;
+            
+            const percentage = Math.round((score / currentQuizQuestions.length) * 100);
+            
+            scoreText.innerHTML = `તમે ${currentQuizQuestions.length} માંથી ${score} પ્રશ્નોના સાચા જવાબ આપ્યા`;
+            scorePercentage.innerHTML = `${percentage}%`;
+            
+            // Set encouragement message
+            if (percentage >= 90) {
+                encouragementText.innerHTML = "અત્યુત્તમ! તમે આ વિષયમાં નિપુણતા મેળવી છે.";
+            } else if (percentage >= 70) {
+                encouragementText.innerHTML = "ખૂબ સરસ! તમારી તૈયારી સારી છે.";
+            } else if (percentage >= 50) {
+                encouragementText.innerHTML = "સારું! વધુ સમીક્ષા કરીને તમે સુધારો કરી શકો છો.";
+            } else {
+                encouragementText.innerHTML = "હજુ સુધારાની જરૂર છે. ફરીથી પ્રયાસ કરો.";
+            }
+            
+            // Animate score bars
+            const bars = [
+                document.getElementById('score-bar-1'),
+                document.getElementById('score-bar-2'),
+                document.getElementById('score-bar-3'),
+                document.getElementById('score-bar-4'),
+                document.getElementById('score-bar-5')
+            ];
+            
+            const targetWidths = [20, 40, 60, 80, 100];
+            const scorePerBar = Math.ceil(currentQuizQuestions.length / 5);
+            
+            setTimeout(() => {
+                bars.forEach((bar, index) => {
+                    const barScore = Math.min(score - (index * scorePerBar), scorePerBar);
+                    const barPercentage = Math.max(0, (barScore / scorePerBar) * 100);
+                    
+                    setTimeout(() => {
+                        bar.style.width = `${barPercentage}%`;
+                    }, index * 300);
+                });
+            }, 500);
+        }
+
+        // --- Event Listeners ---
+        nextBtn.addEventListener('click', handleNextButton);
+        prevBtn.addEventListener('click', handlePrevButton);
+        restartBtn.addEventListener('click', renderHomePage);
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', renderHomePage);
+    </script>
+</body>
+</html>
